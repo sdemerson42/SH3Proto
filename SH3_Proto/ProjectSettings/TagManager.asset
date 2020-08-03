@@ -41,3 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Backdrop
+    uniqueID: 149708287
+    locked: 0
+  - name: Floor
+    uniqueID: 2982427741
+    locked: 0
+  - name: Items
+    uniqueID: 1314260179
+    locked: 0
+  - name: Units
+    uniqueID: 3183594515
+    locked: 0
+  - name: Overlay
+    uniqueID: 4059510501
+    locked: 0
