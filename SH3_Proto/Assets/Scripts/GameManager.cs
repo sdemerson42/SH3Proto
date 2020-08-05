@@ -21,7 +21,8 @@ public class GameManager : MonoBehaviour
         }
 
         sceneBuilder = GetComponent<SceneBuilder>();
-        sceneBuilder.BuildRoom();
+        // sceneBuilder.BuildRoom();
+        sceneBuilder.GridBuild();
     }
 
     // Start is called before the first frame update
