@@ -188,6 +188,8 @@ MonoBehaviour:
   - {fileID: 3680236710134980433, guid: bcb9ff59570cc8440a79890982855df9, type: 3}
   - {fileID: 7367603748472965132, guid: db5ca05ea96dfd749bb6f0d73a0b6105, type: 3}
   - {fileID: 8736954176008888372, guid: b815ee82b7726cf45a519dc6c206da68, type: 3}
+  - {fileID: 3933879486718955319, guid: 33a2d5ab530ec48458d5c4223a7595b3, type: 3}
+  - {fileID: 8967418837636890463, guid: b4242f5fbdbd72f4f8c02b43b52c10ef, type: 3}
   roomTotal: 12
 --- !u!114 &244000994
 MonoBehaviour:
