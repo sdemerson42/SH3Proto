@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
+#if UNITY_EDITOR
 using UnityEditor.Tilemaps;
 using UnityEditor.UIElements;
+#endif
+
 using UnityEngine;
 using UnityEngine.Tilemaps;
 

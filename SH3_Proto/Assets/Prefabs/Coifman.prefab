@@ -191,6 +191,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 6
+  m_dagger: {fileID: 9119823081903999766, guid: 3f165d4f292abed4597df8c1a7041b23,
+    type: 3}
 --- !u!50 &4256534787879583922
 Rigidbody2D:
   serializedVersion: 4
