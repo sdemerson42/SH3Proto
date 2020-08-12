@@ -845,6 +845,7 @@ MonoBehaviour:
   - position: 9
     direction: 69
   floor: {fileID: 11400000, guid: c9e940e5e1f3d53498e40417ae6f6b2f, type: 2}
+  wall: {fileID: 11400000, guid: 0c0c640af0ac0ed4eb90d8b91015e67a, type: 2}
 --- !u!1 &7367603748690480629
 GameObject:
   m_ObjectHideFlags: 0

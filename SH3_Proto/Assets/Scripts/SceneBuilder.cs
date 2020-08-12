@@ -15,6 +15,7 @@ public class SceneBuilder : MonoBehaviour
     public Grid grid;
     public Grid[] rooms;
     public int roomTotal = 5;
+    public int passageGoal = 3;
 
     private Tilemap[] gridLayers;
 
@@ -51,7 +52,7 @@ public class SceneBuilder : MonoBehaviour
             var hookPoint = data.hookPoints[Random.Range(0, data.hookPoints.Length)];
             var currentRoomLayers = currentRoom.GetComponentsInChildren<Tilemap>();
             var bounds = currentRoomLayers[1].cellBounds;
-            Debug.Log(bounds.size);
+            //Debug.Log(bounds.size);
 
             Vector3Int hookPosition = new Vector3Int();
             hookPosition.x = currentRoomPosition.x;
@@ -164,6 +165,20 @@ public class SceneBuilder : MonoBehaviour
             builtPositions.Add(newRoomPosition);
             ++roomCount;
         }
+
+        // Connecting passages
+
+        int passageCounter = 0;
+
+        for (int i = 0; i < 500; ++i)
+        {
+            if (AttemptPassage(builtRooms, builtPositions))
+            {
+                if (++passageCounter == passageGoal) break;
+            }
+        }
+
+        Debug.Log($"Passages built: {passageCounter}");
     }
 
     void AddRoom(Vector3Int position, Grid room)
@@ -229,6 +244,246 @@ public class SceneBuilder : MonoBehaviour
                 if (tile != null) return false;
             }
         }
+
+        return true;
+    }
+
+    struct PassageHook
+    {
+        public Vector2Int position;
+        public char direction;
+        public PassageHook(int x, int y, char _direction)
+        {
+            position = new Vector2Int(x, y);
+            direction = _direction;
+        }
+    }
+
+    bool AttemptPassage(List<Grid> builtRooms, List<Vector3Int> builtPositions)
+    {
+        List<PassageHook> hooks = new List<PassageHook>();
+        List<Vector2Int> anchors = new List<Vector2Int>();
+        List<TileBase> floors = new List<TileBase>();
+        List<TileBase> walls = new List<TileBase>();
+
+        int firstRoomIndex = -1;
+
+        for (int i = 0; i < 2; ++i)
+        {
+            int rIndex = Random.Range(0, builtRooms.Count);
+
+            if (rIndex == firstRoomIndex) return false;
+            firstRoomIndex = rIndex;
+
+            var roomA = builtRooms[rIndex];
+            var roomAPosition = builtPositions[rIndex];
+
+            var data = roomA.GetComponent<GridRoomData>();
+            floors.Add(data.floor);
+            walls.Add(data.wall);
+            var hookPointA = data.hookPoints[Random.Range(0, data.hookPoints.Length)];
+            var currentRoomLayers = roomA.GetComponentsInChildren<Tilemap>();
+            var bounds = currentRoomLayers[1].cellBounds;
+            //Debug.Log(bounds.size);
+
+            Vector3Int hookPositionA = new Vector3Int();
+            hookPositionA.x = roomAPosition.x;
+            hookPositionA.y = roomAPosition.y;
+
+            hookPositionA.x += bounds.xMin;
+            hookPositionA.y += bounds.yMin;
+
+            // Find hookPosition
+
+            switch (hookPointA.direction)
+            {
+                case 'N':
+                    hookPositionA.x += hookPointA.position;
+                    hookPositionA.y += bounds.size.y - 1;
+                    anchors.Add(new Vector2Int(hookPositionA.x, hookPositionA.y + 1));
+                    break;
+                case 'S':
+                    hookPositionA.x += hookPointA.position;
+                    anchors.Add(new Vector2Int(hookPositionA.x, hookPositionA.y - 2));
+                    break;
+                case 'W':
+                    hookPositionA.y += hookPointA.position;
+                    anchors.Add(new Vector2Int(hookPositionA.x - 2, hookPositionA.y));
+                    break;
+                case 'E':
+                    hookPositionA.x += bounds.size.x - 1;
+                    hookPositionA.y += hookPointA.position;
+                    anchors.Add(new Vector2Int(hookPositionA.x + 1, hookPositionA.y));
+                    break;
+            }
+            hooks.Add(new PassageHook(hookPositionA.x,
+                hookPositionA.y, hookPointA.direction));
+        }
+
+        // Check anchor areas
+
+        for (int k = 0; k < 2; ++k)
+        {
+            var anchor = anchors[k];
+            for (int i = anchor.x; i < anchor.x + 2; ++i)
+            {
+                for (int j = anchor.y; j < anchor.y + 2; ++j)
+                {
+                    if (gridLayers[0].GetTile(new Vector3Int(i, j, 0))
+                        != null ||
+                        gridLayers[1].GetTile(new Vector3Int(i, j, 0))
+                        != null)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        Vector2Int seeker = new Vector2Int(anchors[0].x, anchors[0].y);
+        
+        // N/S
+
+        while(seeker.y != anchors[1].y)
+        {
+            if (seeker.y < anchors[1].y) ++seeker.y;
+            else --seeker.y;
+
+            if (gridLayers[1].GetTile(new Vector3Int(seeker.x, seeker.y, 0))
+                        != null ||
+                       gridLayers[1].GetTile(new Vector3Int(seeker.x + 1, seeker.y, 0))
+                        != null)
+            {
+                return false;
+            }
+        }
+
+        // Turning point
+
+        for (int i = seeker.x; i < seeker.x + 2; ++i)
+        {
+            for (int j = seeker.y; j < seeker.y + 2; ++j)
+            {
+                if (gridLayers[1].GetTile(new Vector3Int(seeker.x, seeker.y, 0))
+                        != null) return false;
+            }
+        }
+
+        // E/W
+
+        while (seeker.x != anchors[1].x)
+        {
+            if (seeker.x < anchors[1].x) ++seeker.x;
+            else --seeker.x;
+
+            if (gridLayers[1].GetTile(new Vector3Int(seeker.x, seeker.y, 0))
+                        != null ||
+                        gridLayers[1].GetTile(new Vector3Int(seeker.x, seeker.y + 1, 0))
+                        != null)
+            {
+                return false;
+            }
+        }
+
+        // Success: Build Passage
+
+        List<Vector2Int> newFloors = new List<Vector2Int>();
+
+        // Build "landing pads" and connect
+
+        for (int k = 0; k < 2; ++k)
+        {
+            var anchor = anchors[k];
+            for (int i = anchor.x; i < anchor.x + 2; ++i)
+            {
+                for (int j = anchor.y; j < anchor.y + 2; ++j)
+                {
+                    gridLayers[0].SetTile(new Vector3Int(i, j, 0), floors[0]);
+                    newFloors.Add(new Vector2Int(i, j));
+                }
+            }
+        }
+
+        seeker = new Vector2Int(anchors[0].x, anchors[0].y);
+
+        // N/S
+
+        while (seeker.y != anchors[1].y)
+        {
+            if (seeker.y < anchors[1].y) ++seeker.y;
+            else --seeker.y;
+
+            gridLayers[0].SetTile(new Vector3Int(seeker.x, seeker.y, 0), floors[0]);
+            newFloors.Add(new Vector2Int(seeker.x, seeker.y));
+            gridLayers[0].SetTile(new Vector3Int(seeker.x + 1, seeker.y, 0), floors[0]);
+            newFloors.Add(new Vector2Int(seeker.x + 1, seeker.y));
+        }
+
+        // Turning point
+
+        for (int i = seeker.x; i < seeker.x + 2; ++i)
+        {
+            for (int j = seeker.y; j < seeker.y + 2; ++j)
+            {
+                gridLayers[0].SetTile(new Vector3Int(i, j, 0), floors[0]);
+                newFloors.Add(new Vector2Int(i, j));
+            }
+        }
+
+        // E/W
+
+        while (seeker.x != anchors[1].x)
+        {
+            if (seeker.x < anchors[1].x) ++seeker.x;
+            else --seeker.x;
+
+            gridLayers[0].SetTile(new Vector3Int(seeker.x, seeker.y, 0), floors[0]);
+            newFloors.Add(new Vector2Int(seeker.x, seeker.y));
+            gridLayers[0].SetTile(new Vector3Int(seeker.x, seeker.y + 1, 0), floors[0]);
+            newFloors.Add(new Vector2Int(seeker.x, seeker.y + 1));
+        }
+
+        // WALLS
+
+        for (int k = 0; k < newFloors.Count; ++k)
+        {
+            var curFloor = newFloors[k];
+            for (int i = curFloor.x - 1; i < curFloor.x + 2; ++i)
+            {
+                for (int j = curFloor.y - 1; j < curFloor.y + 2; ++j)
+                {
+                    if (gridLayers[0].GetTile(new Vector3Int(i, j, 0)) == null)
+                    {
+                        gridLayers[1].SetTile(new Vector3Int(i, j, 0), walls[0]);
+                    }
+                }
+            }
+        }
+
+        // Remove Hooktiles
+
+        for (int k = 0; k < 2; ++k)
+        {
+            var hookPoint = hooks[k];
+            var hookPosition = new Vector3Int(hooks[k].position.x,
+                hooks[k].position.y, 0);
+
+            gridLayers[1].SetTile(hookPosition, null);
+            gridLayers[0].SetTile(hookPosition, floors[k]);
+
+            if (hookPoint.direction == 'N' || hookPoint.direction == 'S')
+            {
+                hookPosition.x += 1;
+            }
+            else
+            {
+                hookPosition.y += 1;
+            }
+
+            gridLayers[1].SetTile(hookPosition, null);
+            gridLayers[0].SetTile(hookPosition, floors[k]);
+        }
+
 
         return true;
     }

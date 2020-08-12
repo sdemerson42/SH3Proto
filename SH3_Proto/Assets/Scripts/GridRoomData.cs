@@ -16,4 +16,5 @@ public class GridRoomData : MonoBehaviour
 
     public HookPoint[] hookPoints;
     public TileBase floor;
+    public TileBase wall;
 }

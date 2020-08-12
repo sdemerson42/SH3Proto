@@ -191,6 +191,7 @@ MonoBehaviour:
   - {fileID: 3933879486718955319, guid: 33a2d5ab530ec48458d5c4223a7595b3, type: 3}
   - {fileID: 8967418837636890463, guid: b4242f5fbdbd72f4f8c02b43b52c10ef, type: 3}
   roomTotal: 12
+  passageGoal: 5
 --- !u!114 &244000994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10021,7 +10022,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2582367853713230606}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.3478403, y: 0.8451216, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2582367854326681635}
