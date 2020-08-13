@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Schema;
 
 #if UNITY_EDITOR
 using UnityEditor.Tilemaps;
@@ -16,6 +17,8 @@ public class SceneBuilder : MonoBehaviour
     public Grid[] rooms;
     public int roomTotal = 5;
     public int passageGoal = 3;
+    public int minPassageSteps = 0;
+    public int maxPassageSteps = 15;
 
     private Tilemap[] gridLayers;
 
@@ -169,10 +172,12 @@ public class SceneBuilder : MonoBehaviour
         // Connecting passages
 
         int passageCounter = 0;
+        int tries = 1000 * passageGoal;
 
-        for (int i = 0; i < 500; ++i)
+        for (int i = 0; i < tries; ++i)
         {
-            if (AttemptPassage(builtRooms, builtPositions))
+            if (AttemptPassage(builtRooms, builtPositions, 
+                minPassageSteps, maxPassageSteps))
             {
                 if (++passageCounter == passageGoal) break;
             }
@@ -259,7 +264,8 @@ public class SceneBuilder : MonoBehaviour
         }
     }
 
-    bool AttemptPassage(List<Grid> builtRooms, List<Vector3Int> builtPositions)
+    bool AttemptPassage(List<Grid> builtRooms, List<Vector3Int> builtPositions, 
+        int minSteps = 0, int maxSteps = 15)
     {
         List<PassageHook> hooks = new List<PassageHook>();
         List<Vector2Int> anchors = new List<Vector2Int>();
@@ -319,6 +325,13 @@ public class SceneBuilder : MonoBehaviour
             hooks.Add(new PassageHook(hookPositionA.x,
                 hookPositionA.y, hookPointA.direction));
         }
+
+        // Check distance in steps
+
+        int passageSteps = Mathf.Abs(hooks[0].position.x - hooks[1].position.x) +
+            Mathf.Abs(hooks[0].position.y - hooks[1].position.y);
+        if (passageSteps < minSteps || passageSteps > maxSteps) return false;
+
 
         // Check anchor areas
 

@@ -192,6 +192,8 @@ MonoBehaviour:
   - {fileID: 8967418837636890463, guid: b4242f5fbdbd72f4f8c02b43b52c10ef, type: 3}
   roomTotal: 12
   passageGoal: 5
+  minPassageSteps: 15
+  maxPassageSteps: 30
 --- !u!114 &244000994
 MonoBehaviour:
   m_ObjectHideFlags: 0
