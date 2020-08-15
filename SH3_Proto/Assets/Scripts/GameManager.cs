@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     static public GameManager instance;
 
+    public GameObject player;
+    public Text playerGoldTally;
+
     SceneBuilder sceneBuilder;
+    PlayerLogic playerLogic;
 
     private void Awake()
     {
@@ -19,6 +24,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        playerLogic = player.GetComponent<PlayerLogic>();
 
         sceneBuilder = GetComponent<SceneBuilder>();
         // sceneBuilder.BuildRoom();
@@ -32,8 +39,27 @@ public class GameManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
+        // Gold - Just a test
+
+        int uiGold = int.Parse(playerGoldTally.text);
+        if (uiGold != playerLogic.Gold)
+        {
+            if (uiGold < playerLogic.Gold) ++uiGold;
+            else --uiGold;
+
+            playerGoldTally.text = uiGold.ToString();
+        }
+    }
+
+    public void AddPlayerGold(int value)
+    {
+        playerLogic.Gold += value;
     }
 }

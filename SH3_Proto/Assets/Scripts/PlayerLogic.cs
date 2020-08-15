@@ -15,12 +15,19 @@ public class PlayerLogic : MonoBehaviour
 
     int m_shootCooldown = 20;
     int m_shootCooldownCounter = 0;
+    
+    public int Gold
+    {
+        get;
+        set;
+    }
 
     private void Awake()
     {
         m_animator = GetComponent<Animator>();
         m_rigidBody = GetComponent<Rigidbody2D>();
         m_capsuleCollider = GetComponent<CapsuleCollider2D>();
+        Gold = 0;
     }
 
     // Start is called before the first frame update

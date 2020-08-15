@@ -8,8 +8,10 @@ public class RandomThing : MonoBehaviour
 
     void Awake()
     {
-        Instantiate(objects[Random.Range(0, objects.Length)], transform.position,
-            Quaternion.identity);
+        GameObject thing = objects[Random.Range(0, objects.Length)];
+        if (thing != null) 
+            Instantiate(thing, transform.position, Quaternion.identity);
+        
         Destroy(gameObject);
     }
 
