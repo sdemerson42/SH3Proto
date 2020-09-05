@@ -11,8 +11,9 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public Text playerGoldTally;
 
-    SceneBuilder sceneBuilder;
-    PlayerLogic playerLogic;
+    SceneBuilder m_sceneBuilder;
+    PlayerLogic m_playerLogic;
+    WorldMapBuilder m_worldMapBuilder;
 
     private void Awake()
     {
@@ -25,17 +26,16 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        playerLogic = player.GetComponent<PlayerLogic>();
+        m_playerLogic = player.GetComponent<PlayerLogic>();
 
-        sceneBuilder = GetComponent<SceneBuilder>();
-        // sceneBuilder.BuildRoom();
-        sceneBuilder.GridBuild();
+        m_sceneBuilder = GetComponent<SceneBuilder>();
+        m_worldMapBuilder = GetComponent<WorldMapBuilder>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        m_worldMapBuilder.BuildMap();
     }
 
     // Update is called once per frame
@@ -49,9 +49,9 @@ public class GameManager : MonoBehaviour
         // Gold - Just a test
 
         int uiGold = int.Parse(playerGoldTally.text);
-        if (uiGold != playerLogic.Gold)
+        if (uiGold != m_playerLogic.Gold)
         {
-            if (uiGold < playerLogic.Gold) ++uiGold;
+            if (uiGold < m_playerLogic.Gold) ++uiGold;
             else --uiGold;
 
             playerGoldTally.text = uiGold.ToString();
@@ -60,6 +60,6 @@ public class GameManager : MonoBehaviour
 
     public void AddPlayerGold(int value)
     {
-        playerLogic.Gold += value;
+        m_playerLogic.Gold += value;
     }
 }
