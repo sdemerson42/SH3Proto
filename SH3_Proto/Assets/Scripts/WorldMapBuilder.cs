@@ -45,8 +45,8 @@ public class WorldMapBuilder : MonoBehaviour
     public void BuildMap()
     {
         PerlinNoiseGenerator png = new PerlinNoiseGenerator();
-        const int width = 256;
-        const int height = 256;
+        const int width = 512;
+        const int height = 512;
 
         // Lay down grass and shrub foundation
 
@@ -105,7 +105,7 @@ public class WorldMapBuilder : MonoBehaviour
             for (int j = 0; j < tMap[i].Count; ++j)
             {
                 float val = wMap[i][j];
-                if (val < .25f)
+                if (val < .3f)
                     m_gridLayers[(int)GridLayerIndex.Wall].SetTile(
                                         new Vector3Int(i, j, 0), tileWater);
 
