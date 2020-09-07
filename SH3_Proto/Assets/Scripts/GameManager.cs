@@ -35,7 +35,14 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_worldMapBuilder.BuildMap();
+        if (m_sceneBuilder != null)
+        {
+            m_sceneBuilder.GridBuild();
+        }
+        else if (m_worldMapBuilder != null)
+        {
+            m_worldMapBuilder.BuildMap();
+        }
     }
 
     // Update is called once per frame

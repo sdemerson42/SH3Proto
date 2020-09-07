@@ -165,7 +165,6 @@ GameObject:
   - component: {fileID: 244000995}
   - component: {fileID: 244000994}
   - component: {fileID: 244000993}
-  - component: {fileID: 244000996}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -225,32 +224,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &244000996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 244000992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 554936d08639d1946a8f8c3c58cd5f73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grid: {fileID: 2582367853713230606}
-  tileGrass: {fileID: 11400000, guid: c9e940e5e1f3d53498e40417ae6f6b2f, type: 2}
-  tileWater: {fileID: 11400000, guid: 0c11e16a41af7874088783726a7f8ef2, type: 2}
-  tileShrubLight: {fileID: 11400000, guid: 775775dcbcd79c648b7813a21b82d49f, type: 2}
-  tileShrubDense: {fileID: 11400000, guid: e32f4e7a54bb9904c9b224bd1ea690df, type: 2}
-  tileDesert: {fileID: 11400000, guid: 4aba6263311a2894c80e498931e98952, type: 2}
-  tileSwamp: {fileID: 11400000, guid: 57787435643b8dd48ac9f6db514ac28e, type: 2}
-  tileForestLight: {fileID: 11400000, guid: 40906654f876b0a4e8471c3da72aa06f, type: 2}
-  tileForestDense: {fileID: 11400000, guid: 0c0c640af0ac0ed4eb90d8b91015e67a, type: 2}
-  tileHills: {fileID: 11400000, guid: cde760c506eb10947a9b6dc54818c1da, type: 2}
-  tileMountainLight: {fileID: 11400000, guid: 204639621fe97d04bb8d3bc8aaa25658, type: 2}
-  tileMountainDense: {fileID: 11400000, guid: bb2a172d570f07344811c8889632beaa, type: 2}
-  tileCactus: {fileID: 11400000, guid: 29640acd24805d6468b1e39bfa8fc988, type: 2}
-  tileShallowWater: {fileID: 11400000, guid: 1047200ea9d8e1b459e97706f7ec5ccd, type: 2}
 --- !u!1 &506327047
 GameObject:
   m_ObjectHideFlags: 0
